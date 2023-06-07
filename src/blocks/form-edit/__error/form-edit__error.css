@@ -1,0 +1,15 @@
+.form-edit__error {
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 15px;
+    color: #FF0000;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+
+    display: inline-block;
+    min-height: 25px;
+}
