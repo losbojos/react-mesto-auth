@@ -1,17 +1,24 @@
 import React, { Fragment, useState, useEffect } from 'react';
+import { Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Main from '../components/Main';
 import Footer from '../components/Footer';
 import ImagePopup from '../components/ImagePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
+import { AuthorizationContext } from '../contexts/AuthorizationContext'
 import { AppContext } from '../contexts/AppContext'
 import errorHandler from '../utils/ErrorHandler';
-import apiInstance from '../utils/Api.js';
+import cardsApiInstance from '../utils/CardsApi.js';
 import EditProfilePopup from '../components/EditProfilePopup';
 import EditAvatarPopup from '../components/EditAvatarPopup';
 import { checkLiked } from '../components/Card';
 import AddPlacePopup from './AddPlacePopup';
 import ConfirmationPopup from '../components/ConfirmationPopup';
+import Login from '../components/Login';
+import Register from '../components/Register';
+import authorizationApiInstance from '../utils/AuthorizationApi';
+import { PAGES } from '../utils/Consts';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 
 function App() {
@@ -22,6 +29,66 @@ function App() {
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false); // Открыт попап подтверждения операции?
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false); // Открыт попап расширенного изображения карточки?
   const [selectedCard, setSelectedCard] = useState(null); // Развернутая карточка
+  const [cards, setCards] = useState([]); // Карточки мест
+  const tokenStorageKey = 'jwt';
+
+  const navigate = useNavigate();
+
+
+  // Текущий контекст авторизаци
+  const [authorizationContext, setAuthorizationContext] = useState(
+    { loggedIn: false, email: '', token: '' } // Данные о текущем авторизованном пользователе
+  );
+
+  const handleLogin = ({ email, password }) => {
+
+    authorizationApiInstance.authorize({ email, password })
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem(tokenStorageKey, data.token);
+          setAuthorizationContext({ loggedIn: true, email: email, token: data.token });
+          navigate(PAGES.MAIN);
+        }
+      })
+      .catch(err => errorHandler(err));
+  }
+
+  const handleRegister = ({ email, password }) => {
+    authorizationApiInstance.register({ email, password })
+      .then((data) => {
+        navigate(PAGES.LOGIN); // После регистрации перенаправляем на окно логина
+      })
+      .catch(err => errorHandler(err));
+  }
+
+  const handleLogout = () => {
+    // Удаление токена из локального хранилища
+    localStorage.removeItem(tokenStorageKey);
+
+    // удаление данных пользователя
+    setAuthorizationContext({ loggedIn: false, email: '', token: '' });
+    navigate(PAGES.LOGIN);
+  }
+
+  const tockenCheck = () => {
+    const localToken = localStorage.getItem(tokenStorageKey);
+
+    if (localToken) {
+      authorizationApiInstance.getContent(localToken)
+        .then(data => {
+          setAuthorizationContext({ loggedIn: true, email: data.email, token: localToken });
+          navigate(PAGES.MAIN);
+        })
+        .catch(error => errorHandler(error));
+    }
+  }
+
+  useEffect(() => {
+    tockenCheck(); // Проверить наличие токена 1 раз на старте
+  }, []);
+
+
+
 
   // Текущий пользователь, по умолчанию заполним некоторыми данными, чтобы меньше проверок делать далее
   const [currentUser, setCurrentUser] = useState({
@@ -32,22 +99,20 @@ function App() {
   });
 
   useEffect(() => {
-    apiInstance.getUserInfo()
-      .then(userData => {
-        setCurrentUser(userData);
+    cardsApiInstance.getUserInfo()
+      .then(data => {
+        setCurrentUser(data);
       })
       .catch(error => errorHandler(error));
   }
     , [] // Пустой массив = Эффект не зависит ни от чего = выполняется 1 раз при монтировании
   );
 
-  const [cards, setCards] = useState([]); // Карточки мест
-
   useEffect(() => {
     if (!currentUser || currentUser._id === -1)
       setCards([]); // Пока не залогинились - пустой набор карточек
     else
-      apiInstance.getCards()
+      cardsApiInstance.getCards()
         .then(result => {
           setCards(result);
         })
@@ -102,8 +167,8 @@ function App() {
     // создаем функцию, которая возвращает промис, так как любой запрос возвращает его
     function makeRequest() {
       // `return` позволяет потом дальше продолжать цепочку `then, catch, finally`
-      return apiInstance.setUserInfo({ name, about })
-        .then(userData => setCurrentUser(userData));
+      return cardsApiInstance.setUserInfo({ name, about })
+        .then(data => setCurrentUser(data));
     }
 
     // вызываем универсальную функцию, передавая в нее запрос
@@ -113,8 +178,8 @@ function App() {
   function handleUpdateAvatar({ avatar }) {
 
     function makeRequest() {
-      return apiInstance.setAvatar(avatar)
-        .then(userData => setCurrentUser(userData));
+      return cardsApiInstance.setAvatar(avatar)
+        .then(data => setCurrentUser(data));
     }
 
     handleSubmit(makeRequest);
@@ -125,7 +190,7 @@ function App() {
     const isLiked = checkLiked(card, currentUser._id);
 
     // Отправляем запрос в API и получаем обновлённые данные карточки
-    apiInstance.changeLikeCardStatus(card._id, !isLiked)
+    cardsApiInstance.changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
         setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
       })
@@ -142,7 +207,7 @@ function App() {
 
   function handleCardDelete(deletingCard) {
     function makeRequest() {
-      return apiInstance.deleteCard(deletingCard._id)
+      return cardsApiInstance.deleteCard(deletingCard._id)
         .then(() => {
           setCards(cards.filter(iCard => iCard._id !== deletingCard._id));
         });
@@ -155,7 +220,7 @@ function App() {
   function handleAddPlace({ name, link }) {
 
     function makeRequest() {
-      return apiInstance.addCard({ name, link })
+      return cardsApiInstance.addCard({ name, link })
         .then(newCard => setCards([newCard, ...cards]));
     }
 
@@ -164,52 +229,69 @@ function App() {
 
   return (
     <AppContext.Provider value={{ isLoading }}>
-      <CurrentUserContext.Provider value={currentUser}>
-        <Fragment>
-          <Header />
-          <Main
-            onEditProfile={onEditProfileInfo}
-            onAddPlace={onAddCard}
-            onEditAvatar={onEditAvatar}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDeleteConfirmation}
-          />
-          <Footer />
+      <AuthorizationContext.Provider value={authorizationContext}>
+        <CurrentUserContext.Provider value={currentUser}>
+          <Fragment>
+            <Header handleLogout={handleLogout} />
 
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser} />
+            <Routes>
 
-          <EditAvatarPopup
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
-            onUpdateAvatar={handleUpdateAvatar}
-          />
+              <Route path="/" element={<ProtectedRoute element={Main}
+                onEditProfile={onEditProfileInfo}
+                onAddPlace={onAddCard}
+                onEditAvatar={onEditAvatar}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDeleteConfirmation}
+              />} />
 
-          <AddPlacePopup
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            onAddPlace={handleAddPlace}
-          />
+              <Route path={PAGES.LOGIN} element={
+                <Login handleLogin={handleLogin} />
+              } />
 
-          <ConfirmationPopup
-            isOpen={isConfirmationPopupOpen}
-            onClose={closeAllPopups}
-            onConfirm={handleCardDelete}
-            onConfirmParam={handleConfirmationParam}
-          />
+              <Route path={PAGES.REGISTER} element={
+                <Register handleRegister={handleRegister} />
+              } />
 
-          <ImagePopup
-            isOpen={isImagePopupOpen}
-            card={selectedCard}
-            onClose={closeAllPopups}
-          />
+              <Route path="*" element={<Navigate to={PAGES.MAIN} replace />} />
 
-        </Fragment>
-      </CurrentUserContext.Provider>
+            </Routes>
+            <Footer />
+
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser} />
+
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar}
+            />
+
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
+              onClose={closeAllPopups}
+              onAddPlace={handleAddPlace}
+            />
+
+            <ConfirmationPopup
+              isOpen={isConfirmationPopupOpen}
+              onClose={closeAllPopups}
+              onConfirm={handleCardDelete}
+              onConfirmParam={handleConfirmationParam}
+            />
+
+            <ImagePopup
+              isOpen={isImagePopupOpen}
+              card={selectedCard}
+              onClose={closeAllPopups}
+            />
+
+          </Fragment>
+        </CurrentUserContext.Provider>
+      </AuthorizationContext.Provider>
     </AppContext.Provider>
   );
 }

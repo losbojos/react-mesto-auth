@@ -1,45 +1,43 @@
-import { serverUrl, myToken } from '../utils/Consts.js';
-
-const methods = { get: 'GET', patch: 'PATCH', post: 'POST', put: 'PUT', delete: 'DELETE' };
+import { serverUrl, myToken, REST_METHODS } from './Consts.js';
 
 const urls = { usersMe: '/users/me', avatar: '/avatar', cards: '/cards', likes: '/likes' };
 
-class Api {
+class CardsApi {
     constructor({ baseUrl, token }) {
         this.baseUrl = baseUrl;
         this.token = token;
     }
 
     getUserInfo() {
-        return this._requestServer(urls.usersMe, methods.get);
+        return this._requestServer(urls.usersMe, REST_METHODS.GET);
     }
 
     setUserInfo({ name, about }) {
-        return this._requestServer(urls.usersMe, methods.patch, { name, about });
+        return this._requestServer(urls.usersMe, REST_METHODS.PATCH, { name, about });
     }
 
     setAvatar(link) {
         return this._requestServer(
             `${urls.usersMe}${urls.avatar}`,
-            methods.patch,
+            REST_METHODS.PATCH,
             { avatar: link });
     }
 
     getCards() {
-        return this._requestServer(urls.cards, methods.get);
+        return this._requestServer(urls.cards, REST_METHODS.GET);
     }
 
     addCard({ name, link }) {
-        return this._requestServer(urls.cards, methods.post, { name, link });
+        return this._requestServer(urls.cards, REST_METHODS.POST, { name, link });
     }
 
     deleteCard(id) {
-        return this._requestServer(`${urls.cards}/${id}`, methods.delete);
+        return this._requestServer(`${urls.cards}/${id}`, REST_METHODS.DELETE);
     }
 
     changeLikeCardStatus(cardId, newLikeStatus) {
         return this._requestServer(`${urls.cards}/${cardId}${urls.likes}`,
-            newLikeStatus ? methods.put : methods.delete);
+            newLikeStatus ? REST_METHODS.PUT : REST_METHODS.DELETE);
     }
 
     _requestServer(urlAddition, method, bodyObject = null) {
@@ -66,9 +64,9 @@ class Api {
     }
 }
 
-const apiInstance = new Api({
+const cardsApiInstance = new CardsApi({
     baseUrl: serverUrl,
     token: myToken
 });
 
-export default apiInstance;
+export default cardsApiInstance;

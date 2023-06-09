@@ -11,8 +11,17 @@ const validationOptions = {
 }
 
 const cardTemplateId = "card-template";
-const serverUrl = 'https://mesto.nomoreparties.co/v1/cohort-64';
+const CARDS_SERVER_URL = 'https://mesto.nomoreparties.co/v1/cohort-64';
+const AUTHORIZATION_SERVER_URL = 'https://auth.nomoreparties.co';
+
 const myToken = 'aa9e9707-2a21-4ede-81bb-dea5ef0ef1d1';
 const submitButtonSelector = '.form-edit__button-save';
 
-export { validationOptions, cardTemplateId, serverUrl, myToken, submitButtonSelector }
+const REST_METHODS = { GET: 'GET', PATCH: 'PATCH', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
+
+const PAGES = { MAIN: "/", LOGIN: "/sign-in", REGISTER: "/sign-up" };
+
+export {
+    validationOptions, cardTemplateId, CARDS_SERVER_URL as serverUrl, myToken, submitButtonSelector,
+    REST_METHODS, AUTHORIZATION_SERVER_URL, PAGES
+}

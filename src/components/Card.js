@@ -10,7 +10,6 @@ function checkLiked(card, currentUserId) {
 
 function Card(props) {
 
-    //console.log('props: ', props);
     const currentUser = useContext(CurrentUserContext); // Текущий пользователь в глобальном контексте
     const caption = props.name; // Заголовок изображения
     const imageLink = props.link; // Ссылка на изображение

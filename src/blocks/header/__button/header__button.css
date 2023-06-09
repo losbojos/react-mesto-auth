@@ -1,0 +1,22 @@
+/* Кнопки в шапке в зависимости от текущей страницы: Войти\Выйти\Регистрация */
+.header__button {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height, or 122% */
+
+    text-align: right;
+
+    margin: auto 12px;
+    padding: 1px;
+    border: none;
+
+    background-color: transparent;
+    text-decoration: none;
+}
+
+.header__button:last-of-type {
+    margin-right: 0;
+}
