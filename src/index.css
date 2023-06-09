@@ -45,6 +45,12 @@
 
 /********************************************************************************/
 
+@import url("./blocks/info-tooltip/info-tooltip.css");
+@import url("./blocks/info-tooltip/__icon/info-tooltip__icon.css");
+@import url("./blocks/info-tooltip/__message/info-tooltip__message.css");
+
+/********************************************************************************/
+
 @import url("./blocks/login/login.css");
 @import url("./blocks/login/__link/login__link.css");
 @import url("./blocks/login/__submit/login__submit.css");

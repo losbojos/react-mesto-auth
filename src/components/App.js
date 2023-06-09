@@ -7,7 +7,6 @@ import ImagePopup from '../components/ImagePopup';
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { AuthorizationContext } from '../contexts/AuthorizationContext'
 import { AppContext } from '../contexts/AppContext'
-import errorHandler from '../utils/ErrorHandler';
 import cardsApiInstance from '../utils/CardsApi.js';
 import EditProfilePopup from '../components/EditProfilePopup';
 import EditAvatarPopup from '../components/EditAvatarPopup';
@@ -19,21 +18,32 @@ import Register from '../components/Register';
 import authorizationApiInstance from '../utils/AuthorizationApi';
 import { PAGES } from '../utils/Consts';
 import { ProtectedRoute } from '../components/ProtectedRoute';
-
+import infoIcon from '../images/infotooltip/info.svg';
+import errorIcon from '../images/infotooltip/error.svg';
+import InfoTooltip from '../components/InfoTooltip';
 
 function App() {
 
+  // popups
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false); // Открыт попап редактирования профиля?
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false); // Открыт попап добавления карточки?
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false); // Открыт попап редактирования аватара?
   const [isConfirmationPopupOpen, setIsConfirmationPopupOpen] = useState(false); // Открыт попап подтверждения операции?
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false); // Открыт попап расширенного изображения карточки?
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false); // Открыт попап с информационным сообщением?
+
   const [selectedCard, setSelectedCard] = useState(null); // Развернутая карточка
   const [cards, setCards] = useState([]); // Карточки мест
   const tokenStorageKey = 'jwt';
 
   const navigate = useNavigate();
 
+  const errorHandler = (error, afterClose = null) => {
+    console.log(error);
+
+    //alert(error);
+    handleInfoTooltip(error, errorIcon, afterClose);
+  }
 
   // Текущий контекст авторизаци
   const [authorizationContext, setAuthorizationContext] = useState(
@@ -56,7 +66,8 @@ function App() {
   const handleRegister = ({ email, password }) => {
     authorizationApiInstance.register({ email, password })
       .then((data) => {
-        navigate(PAGES.LOGIN); // После регистрации перенаправляем на окно логина
+        handleInfoTooltip("Вы успешно зарегистрировались!", infoIcon,
+          navigate(PAGES.LOGIN)); // После регистрации перенаправляем на окно логина
       })
       .catch(err => errorHandler(err));
   }
@@ -89,7 +100,6 @@ function App() {
 
 
 
-
   // Текущий пользователь, по умолчанию заполним некоторыми данными, чтобы меньше проверок делать далее
   const [currentUser, setCurrentUser] = useState({
     _id: -1, // Идентификатор пользователя
@@ -97,6 +107,7 @@ function App() {
     about: '', // О пользователе
     avatar: '' // Аватар
   });
+
 
   useEffect(() => {
     cardsApiInstance.getUserInfo()
@@ -127,6 +138,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsConfirmationPopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoTooltipOpen(false);
   }
 
   function onEditProfileInfo() {
@@ -144,6 +156,24 @@ function App() {
   function handleCardClick(card) {
     setSelectedCard(card);
     setIsImagePopupOpen(true);
+  }
+
+  // Текст и иконка для высплывабщего сообщения
+  const [infoTooltip, setInfoTooltip] = useState({
+    message: '',
+    iconSource: '',
+    afterClose: null
+  });
+
+  function handleInfoTooltip(msg, iconSource, afterClose = null) {
+
+    setInfoTooltip({
+      message: msg,
+      iconSource: iconSource,
+      afterClose: afterClose
+    });
+
+    setIsInfoTooltipOpen(true);
   }
 
   // Состояние ожидания ответа от сервера
@@ -288,6 +318,16 @@ function App() {
               card={selectedCard}
               onClose={closeAllPopups}
             />
+
+            <InfoTooltip
+              isOpen={isInfoTooltipOpen}
+              onClose={closeAllPopups}
+              afterClose={infoTooltip.afterClose}
+              message={infoTooltip.message}
+              iconLink={infoTooltip.iconSource}
+            />
+
+
 
           </Fragment>
         </CurrentUserContext.Provider>
