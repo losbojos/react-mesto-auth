@@ -1,15 +1,14 @@
+/* FIGMA 320 design (default) */
 .login__submit {
     /* Войти */
 
     /* width: 190px; */
     height: 50px;
-    margin: auto 0 0;
+    margin: auto 30px 0;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    font-size: 18px;
-    line-height: 22px;
 
     text-align: center;
     color: #000000;
@@ -18,4 +17,22 @@
     border-radius: 2px;
     background-color: #FFFFFF;
 
+    font-size: 16px;
+    line-height: 19px;
+}
+
+/* NO FIGMA design */
+@media screen and (min-width: 768px) {
+    .login__submit {
+        font-size: 17px;
+        line-height: 21px;
+    }
+}
+
+/* FIGMA 1280 */
+@media screen and (min-width: 1024px) {
+    .login__submit {
+        font-size: 18px;
+        line-height: 22px;
+    }
 }

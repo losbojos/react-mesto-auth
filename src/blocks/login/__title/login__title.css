@@ -1,16 +1,34 @@
+/* FIGMA 320 design (default) */
+
 .login__title {
     /* Вход */
-
-    margin: 0;
-    padding: 0;
 
     font-family: 'Inter';
     font-style: normal;
     font-weight: 900;
-    font-size: 24px;
-    line-height: 29px;
 
     text-align: center;
-
     color: #FFFFFF;
+
+    margin: 0 30px;
+    padding: 0;
+
+    font-size: 20px;
+    line-height: 24px;
+}
+
+/* NO FIGMA design */
+@media screen and (min-width: 768px) {
+    .login__title {
+        font-size: 22px;
+        line-height: 27px;
+    }
+}
+
+/* FIGMA 1280 */
+@media screen and (min-width: 1024px) {
+    .login__title {
+        font-size: 24px;
+        line-height: 29px;
+    }
 }

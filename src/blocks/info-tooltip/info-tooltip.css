@@ -1,3 +1,4 @@
+/* FIGMA 320 design (default) */
 .info-tooltip {
     display: flex;
     flex-direction: column;
@@ -9,3 +10,9 @@
     border-radius: 10px;
     max-width: 400px;
 }
+
+/* NO FIGMA design */
+@media screen and (min-width: 768px) {}
+
+/* FIGMA 1280 */
+@media screen and (min-width: 1024px) {}
