@@ -30,7 +30,7 @@ function Register({ handleRegister }) {
                 />
             </div>
             <button type="submit" className="login__submit cursor-pointer">Зарегистрироваться</button>
-            <a href={PAGES.LOGIN} className="login__link cursor-pointer">Уже зарегистрированы? Войти</a>
+            <p className="login__text">Уже зарегистрированы? <a href={PAGES.LOGIN} className="login__text login__text_link cursor-pointer">Войти</a></p>
         </form>
 
     );

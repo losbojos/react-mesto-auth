@@ -1,6 +1,5 @@
-.login__link {
-    /* Уже зарегистрированы? Войти */
-
+.login__text {
+    /* Уже зарегистрированы? Войти*/
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
@@ -11,5 +10,4 @@
 
     color: #FFFFFF;
     margin: 15px 0 0;
-    text-decoration: none;
 }

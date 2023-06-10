@@ -21,18 +21,18 @@ function Header({ handleLogout }) {
                     (
                         <Fragment>
                             <p className="header__info">{authorizationContext.email}</p>
-                            <a href='#' onClick={handleLogout} className="header__button header__button_logout cursor-pointer">Выйти</a>
+                            <a href='#' onClick={handleLogout} className="header__button cursor-pointer">Выйти</a>
                         </Fragment>
                     )
                 }
                 {isLoginPage &&
                     (
-                        <a href={PAGES.REGISTER} className="header__button header__button_register cursor-pointer">Регистрация</a>
+                        <a href={PAGES.REGISTER} className="header__button cursor-pointer">Регистрация</a>
                     )
                 }
                 {isRegisterPage &&
                     (
-                        <a href={PAGES.LOGIN} className="header__button header__button_login cursor-pointer">Войти</a>
+                        <a href={PAGES.LOGIN} className="header__button cursor-pointer">Войти</a>
                     )
                 }
             </nav>
