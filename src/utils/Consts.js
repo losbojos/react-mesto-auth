@@ -19,7 +19,7 @@ const submitButtonSelector = '.form-edit__button-save';
 
 const REST_METHODS = { GET: 'GET', PATCH: 'PATCH', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
 
-const PAGES = { MAIN: "/", LOGIN: "/sign-in", REGISTER: "/sign-up" };
+const PAGES = { MAIN: "/", LOGIN: "/signin", REGISTER: "/signup" };
 
 export {
     validationOptions, cardTemplateId, CARDS_SERVER_URL as serverUrl, myToken, submitButtonSelector,
