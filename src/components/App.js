@@ -87,7 +87,7 @@ function App() {
     if (localToken) {
       authorizationApiInstance.getContent(localToken)
         .then(data => {
-          setAuthorizationContext({ loggedIn: true, email: data.email, token: localToken });
+          setAuthorizationContext({ loggedIn: true, email: data.data.email, token: localToken });
           navigate(PAGES.MAIN);
         })
         .catch(error => errorHandler(error));
