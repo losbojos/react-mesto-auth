@@ -1,21 +1,21 @@
-.form-edit__input-section {
+.form__input-section {
     margin: 0;
 }
 
-.form-edit__input-section:first-of-type {
+.form__input-section:first-of-type {
     margin: 75px 0 0;
 }
 
 /* NO FIGMA design */
 @media screen and (min-width: 768px) {
-    .form-edit__input-section:first-of-type {
+    .form__input-section:first-of-type {
         margin: 64px 0 0;
     }
 }
 
 /* FIGMA 1280 */
 @media screen and (min-width: 1024px) {
-    .form-edit__input-section:first-of-type {
+    .form__input-section:first-of-type {
         margin: 54px 0 0;
     }
 }

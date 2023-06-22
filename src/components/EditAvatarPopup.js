@@ -3,7 +3,6 @@ import PopupWithForm from '../components/PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { AppContext } from '../contexts/AppContext'
 import useFormAndValidation from '../hooks/useFormAndValidation';
-import { validationOptions } from '../utils/Consts.js'
 
 function EditAvatarPopup(props) {
 
@@ -49,16 +48,16 @@ function EditAvatarPopup(props) {
             onSubmit={handleSubmit}
             isValid={isValid}
         >
-            <div className="form-edit__input-section">
+            <div className="form__input-section">
                 <input
                     type="url" placeholder="Ссылка на картинку"
                     name={inputAvatar} id="profile-avatar-id"
                     // ref={inputRef} 
                     value={values[inputAvatar] || ""} onChange={handleChange}
                     required
-                    className={`form-edit__input ${errors[inputAvatar] && validationOptions.inputInvalidClass}`}
+                    className={`form__input ${errors[inputAvatar] && 'form__input_invalid'}`}
                 />
-                <span className={`form-edit__error ${!isValid && validationOptions.inputErrorClass}`} id="profile-avatar-id-error">
+                <span className={`form__error ${!isValid && 'form__error_active'}`} id="profile-avatar-id-error">
                     {errors[inputAvatar]}
                 </span>
             </div>

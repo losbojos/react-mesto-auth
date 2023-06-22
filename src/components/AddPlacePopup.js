@@ -2,8 +2,6 @@ import React, { useContext } from 'react';
 import PopupWithForm from '../components/PopupWithForm';
 import { AppContext } from '../contexts/AppContext'
 import useFormAndValidation from '../hooks/useFormAndValidation';
-import { validationOptions } from '../utils/Consts.js'
-
 
 function AddPlacePopup(props) {
 
@@ -38,28 +36,28 @@ function AddPlacePopup(props) {
             onSubmit={handleSubmit}
             isValid={isValid}
         >
-            <div className="form-edit__input-section">
+            <div className="form__input-section">
                 <input
                     type="text" placeholder="Название"
                     name={inputName} id="image-caption-id"
                     value={values[inputName] || ""} onChange={handleChange}
                     required minLength="2" maxLength="30"
-                    className={`form-edit__input ${errors[inputName] && validationOptions.inputInvalidClass}`}
+                    className={`form__input ${errors[inputName] && 'form__input_invalid'}`}
                 />
-                <span className={`form-edit__error ${!isValid && validationOptions.inputErrorClass}`} id="image-caption-id-error">
+                <span className={`form__error ${!isValid && 'form__error_active'}`} id="image-caption-id-error">
                     {errors[inputName]}
                 </span>
 
             </div>
-            <div className="form-edit__input-section">
+            <div className="form__input-section">
                 <input
                     type="url" placeholder="Ссылка на картинку"
                     name={inputLink} id="image-link-id"
                     value={values[inputLink] || ""} onChange={handleChange}
                     required
-                    className={`form-edit__input ${errors[inputLink] && validationOptions.inputInvalidClass}`}
+                    className={`form__input ${errors[inputLink] && 'form__input_invalid'}`}
                 />
-                <span className={`form-edit__error ${!isValid && validationOptions.inputErrorClass}`} id="image-link-id-error">
+                <span className={`form__error ${!isValid && 'form__error_active'}`} id="image-link-id-error">
                     {errors[inputLink]}
                 </span>
             </div>

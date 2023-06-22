@@ -23,7 +23,7 @@ function ConfirmationPopup(props) {
             onClose={onClose}
             onSubmit={handleSubmit}
         >
-            <p className="form-edit__text">Вы уверены?</p>
+            <p className="form__text">Вы уверены?</p>
         </PopupWithForm>
     );
 }

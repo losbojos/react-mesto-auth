@@ -2,9 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import PopupWithForm from '../components/PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { AppContext } from '../contexts/AppContext'
-import { useForm } from '../hooks/useForm';
 import useFormAndValidation from '../hooks/useFormAndValidation';
-import { validationOptions } from '../utils/Consts.js'
 
 function EditProfilePopup(props) {
 
@@ -46,27 +44,27 @@ function EditProfilePopup(props) {
             isValid={isValid}
         >
             <div>
-                <div className="form-edit__input-section">
+                <div className="form__input-section">
                     <input
                         type="text" placeholder="Имя"
                         name={inputName} id="profile-name-id"
-                        value={values.name} onChange={handleChange}
+                        value={values[inputName] || ''} onChange={handleChange}
                         required minLength="2" maxLength="40"
-                        className={`form-edit__input ${errors[inputName] && validationOptions.inputInvalidClass}`}
+                        className={`form__input ${errors[inputName] && 'form__input_invalid'}`}
                     />
-                    <span className={`form-edit__error ${errors[inputName] && validationOptions.inputErrorClass}`}>
+                    <span className={`form__error ${errors[inputName] && 'form__error_active'}`}>
                         {errors[inputName]}
                     </span>
                 </div>
-                <div className="form-edit__input-section">
+                <div className="form__input-section">
                     <input
                         type="text" placeholder="О себе"
                         name={inputAbout} id="profile-about-id"
-                        value={values.about} onChange={handleChange}
+                        value={values[inputAbout] || ''} onChange={handleChange}
                         required minLength="2" maxLength="200"
-                        className={`form-edit__input ${errors[inputAbout] && validationOptions.inputInvalidClass}`}
+                        className={`form__input ${errors[inputAbout] && 'form__input_invalid'}`}
                     />
-                    <span className={`form-edit__error ${errors[inputAbout] && validationOptions.inputErrorClass}`}>
+                    <span className={`form__error ${errors[inputAbout] && 'form__error_active'}`}>
                         {errors[inputAbout]}
                     </span>
                 </div>

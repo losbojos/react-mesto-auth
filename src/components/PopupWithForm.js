@@ -39,11 +39,11 @@ function PopupWithForm(props) {
                 >
                 </button>
                 <h2 className="popup__title">{title}</h2>
-                <form name={name} className="form-edit" onSubmit={onSubmit}
+                <form name={name} className="form" onSubmit={onSubmit}
                 // ref={formRef}
                 >
                     {children}
-                    <button type="submit" className="form-edit__button-save cursor-pointer" disabled={!isValid}>
+                    <button type="submit" className="form__button-save cursor-pointer" disabled={!isValid}>
                         {buttonText || "Сохранить"}
                     </button>
                 </form>
