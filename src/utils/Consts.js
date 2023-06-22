@@ -20,7 +20,7 @@ const myToken = 'aa9e9707-2a21-4ede-81bb-dea5ef0ef1d1';
 
 const REST_METHODS = { GET: 'GET', PATCH: 'PATCH', POST: 'POST', PUT: 'PUT', DELETE: 'DELETE' };
 
-const PAGES = { MAIN: "/", LOGIN: "/signin", REGISTER: "/signup" };
+const PAGES = { MAIN: "/main", LOGIN: "/signin", REGISTER: "/signup" };
 
 export {
     cardTemplateId, CARDS_SERVER_URL as serverUrl, myToken,

@@ -266,7 +266,7 @@ function App() {
 
             <Routes>
 
-              <Route path="/" element={<ProtectedRoute element={Main}
+              <Route path={PAGES.MAIN} element={<ProtectedRoute element={Main}
                 onEditProfile={onEditProfileInfo}
                 onAddPlace={onAddCard}
                 onEditAvatar={onEditAvatar}
