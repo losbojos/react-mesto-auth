@@ -34,7 +34,8 @@ function EditAvatarPopup(props) {
         e.preventDefault();
 
         onUpdateAvatar({
-            avatar: inputRef.current.value,
+            // avatar: inputRef.current.value,
+            avatar: values[inputAvatar]
         });
     }
 
