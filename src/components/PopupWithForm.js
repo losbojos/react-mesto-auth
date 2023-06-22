@@ -8,17 +8,24 @@ import { usePopupClose } from '../hooks/usePopupClose';
         buttonText: Текст кнопки подтверждения операции (Сохранить, Создать итп)
         isOpen: Открыт ли попап?
         onClose: Обработчик закрытия
-
+        onSubmit: Обработчик принятия формы
         children: вложенное содержимое формы в виде JSX-разметки
+        isValid: Состояние валидности формы - приходит извне от валидации формы, чтобы 2 раза не валидировать
     }
 */
 function PopupWithForm(props) {
 
-    const { title, name, buttonText, isOpen, onClose, onSubmit } = props;
+    const { title, name, buttonText, isOpen, onClose, onSubmit, children, isValid = true } = props;
 
     const classNames = `popup popup_${name} ${isOpen ? 'popup_opened' : ''}`
 
     usePopupClose(isOpen, onClose);
+
+    // const formRef = React.useRef();
+    // const [isValid, setIsValid] = React.useState(false);
+    // React.useEffect(() => {
+    //     setIsValid(formRef.current.checkValidity());
+    // }, [children]);
 
     return (
 
@@ -32,9 +39,13 @@ function PopupWithForm(props) {
                 >
                 </button>
                 <h2 className="popup__title">{title}</h2>
-                <form name={name} className="form-edit" /* noValidate */ onSubmit={onSubmit}>
-                    {props.children}
-                    <button type="submit" className="form-edit__button-save cursor-pointer">{buttonText || "Сохранить"}</button>
+                <form name={name} className="form-edit" onSubmit={onSubmit}
+                // ref={formRef}
+                >
+                    {children}
+                    <button type="submit" className="form-edit__button-save cursor-pointer" disabled={!isValid}>
+                        {buttonText || "Сохранить"}
+                    </button>
                 </form>
             </div>
         </div>

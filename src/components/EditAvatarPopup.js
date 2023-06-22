@@ -2,6 +2,8 @@ import React, { useRef, useContext, useEffect } from 'react';
 import PopupWithForm from '../components/PopupWithForm';
 import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import { AppContext } from '../contexts/AppContext'
+import useFormAndValidation from '../hooks/useFormAndValidation';
+import { validationOptions } from '../utils/Consts.js'
 
 function EditAvatarPopup(props) {
 
@@ -9,16 +11,25 @@ function EditAvatarPopup(props) {
 
     const { isLoading } = useContext(AppContext); // Глобальный контекст приложения
     const currentUser = useContext(CurrentUserContext); // Текущий пользователь в глобальном контексте
-    const inputRef = useRef(); // записываем объект, возвращаемый хуком, в переменную    
+    // const inputRef = useRef(); // записываем объект, возвращаемый хуком, в переменную    
+    const inputAvatar = 'profile-avatar'; // Имя инпута со ссылкой на изображение аватара
 
+    /*
     // После загрузки текущего пользователя из API
     // его данные будут использованы в управляемых компонентах.
     useEffect(() => {
         inputRef.current.value = currentUser.avatar;
-    }, [currentUser, isOpen]); /* Нужно еще следить за isOpen (за состоянием открытости), 
-    чтобы вставлять в инпуты данные пользователя, иначе, 
-    если мы удалим информацию из инпутов и просто закроем попап, 
-    то при следующем открытии инпуты будут пустые (без данных пользователя)*/
+    }, [currentUser, isOpen]); 
+    // Нужно еще следить за isOpen (за состоянием открытости), 
+    // чтобы вставлять в инпуты данные пользователя, иначе, 
+    // если мы удалим информацию из инпутов и просто закроем попап, 
+    // то при следующем открытии инпуты будут пустые (без данных пользователя)
+    */
+
+    const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation();
+    React.useEffect(() => {
+        resetForm({ [inputAvatar]: currentUser.avatar });
+    }, [currentUser, isOpen]);
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -36,13 +47,20 @@ function EditAvatarPopup(props) {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
+            isValid={isValid}
         >
             <div className="form-edit__input-section">
-                <input type="url" className="form-edit__input" placeholder="Ссылка на картинку"
-                    id="profile-avatar-id" name="profile-avatar" required
-                    ref={inputRef}
+                <input
+                    type="url" placeholder="Ссылка на картинку"
+                    name={inputAvatar} id="profile-avatar-id"
+                    // ref={inputRef} 
+                    value={values[inputAvatar] || ""} onChange={handleChange}
+                    required
+                    className={`form-edit__input ${errors[inputAvatar] && validationOptions.inputInvalidClass}`}
                 />
-                <span className="form-edit__error" id="profile-avatar-id-error"></span>
+                <span className={`form-edit__error ${!isValid && validationOptions.inputErrorClass}`} id="profile-avatar-id-error">
+                    {errors[inputAvatar]}
+                </span>
             </div>
         </PopupWithForm>
     );

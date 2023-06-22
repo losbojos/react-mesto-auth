@@ -1,24 +1,23 @@
 import React, { useContext } from 'react';
 import PopupWithForm from '../components/PopupWithForm';
-import { useForm } from '../hooks/useForm';
 import { AppContext } from '../contexts/AppContext'
+import useFormAndValidation from '../hooks/useFormAndValidation';
+import { validationOptions } from '../utils/Consts.js'
+
 
 function AddPlacePopup(props) {
 
     const { isOpen, onClose, onAddPlace } = props;
 
-    const inputName = 'name';
-    const inputLink = 'link';
+    const inputName = 'name'; // Имя инпута с названием новой карточки
+    const inputLink = 'link'; // Имя инпута с ссылкой на изображение новой карточки
 
     const { isLoading } = useContext(AppContext); // Глобальный контекст приложения
 
-    const { values, handleChange, setValues } = useForm({
-        [inputName]: '', // Название новой карточки
-        [inputLink]: '' // Ссылка на изображение новой карточки
-    });
+    const { values, handleChange, errors, isValid, resetForm } = useFormAndValidation();
 
     React.useEffect(() => {
-        setValues({ [inputName]: '', [inputLink]: '' });
+        resetForm();
     }, [isOpen]);
 
     function handleSubmit(e) {
@@ -37,20 +36,32 @@ function AddPlacePopup(props) {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
+            isValid={isValid}
         >
             <div className="form-edit__input-section">
-                <input type="text" className="form-edit__input" placeholder="Название" id="image-caption-id"
-                    name={inputName} required minLength="2" maxLength="30"
-                    value={values[inputName]} onChange={handleChange}
+                <input
+                    type="text" placeholder="Название"
+                    name={inputName} id="image-caption-id"
+                    value={values[inputName] || ""} onChange={handleChange}
+                    required minLength="2" maxLength="30"
+                    className={`form-edit__input ${errors[inputName] && validationOptions.inputInvalidClass}`}
                 />
-                <span className="form-edit__error" id="image-caption-id-error"></span>
+                <span className={`form-edit__error ${!isValid && validationOptions.inputErrorClass}`} id="image-caption-id-error">
+                    {errors[inputName]}
+                </span>
+
             </div>
             <div className="form-edit__input-section">
-                <input type="url" className="form-edit__input" placeholder="Ссылка на картинку"
-                    id="image-link-id" name={inputLink} required
-                    value={values[inputLink]} onChange={handleChange}
+                <input
+                    type="url" placeholder="Ссылка на картинку"
+                    name={inputLink} id="image-link-id"
+                    value={values[inputLink] || ""} onChange={handleChange}
+                    required
+                    className={`form-edit__input ${errors[inputLink] && validationOptions.inputInvalidClass}`}
                 />
-                <span className="form-edit__error" id="image-link-id-error"></span>
+                <span className={`form-edit__error ${!isValid && validationOptions.inputErrorClass}`} id="image-link-id-error">
+                    {errors[inputLink]}
+                </span>
             </div>
         </PopupWithForm>
     );
