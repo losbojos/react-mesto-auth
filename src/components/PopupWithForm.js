@@ -43,13 +43,14 @@ function PopupWithForm(props) {
                 // ref={formRef}
                 >
                     {children}
-                    <button type="submit" className="form__button-save cursor-pointer" disabled={!isValid}>
+                    <button type="submit"
+                        className={`form__button-save cursor-pointer ${!isValid && 'form__button-save_disabled'}`}
+                    >
                         {buttonText || "Сохранить"}
                     </button>
                 </form>
             </div>
         </div>
-
     );
 }
 
