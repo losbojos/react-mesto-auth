@@ -21,7 +21,7 @@ function AuthForm({ handleAuth, titleText, buttonSubmitText, children }) {
 
                 <input id="email" required name={inputEmail} type="email"
                     placeholder='Email'
-                    value={values[inputEmail]} onChange={handleChange}
+                    value={values[inputEmail] || ''} onChange={handleChange}
                     className={`login__input ${errors[inputEmail] && 'login__input_invalid'}`}
                 />
                 <span className={`form__error ${errors[inputEmail] && 'form__error_active'}`}>
@@ -30,7 +30,7 @@ function AuthForm({ handleAuth, titleText, buttonSubmitText, children }) {
 
                 <input id="password" required minLength="8" name={inputPwd} type="password"
                     placeholder='Пароль' autoComplete='off'
-                    value={values[inputPwd]} onChange={handleChange}
+                    value={values[inputPwd] || ''} onChange={handleChange}
                     className={`login__input ${errors[inputPwd] && 'login__input_invalid'}`}
                 />
                 <span className={`form__error ${errors[inputPwd] && 'form__error_active'}`}>
